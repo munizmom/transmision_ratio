@@ -1,0 +1,10 @@
+script to analyse the transmision ratio and the letality suffer  by the mice lines carrying a specific mutation or genotype
+
+                                                                                                               #
+# This script  have some comments with explanations about the code.                                                     #
+# All the orders that are after a #, are there just to see how the output and input files are. For running these        #
+# orders in R, you will need to erase the # sign present at the beginning of the line.                                  #
+#                                                                                                                       #
+# This script was generated in March 2017 by Mar Muniz, PhD student IGBMC : Herault Lab.                                #
+# Last modification of the Script: 080317. Mantained by Herault Lab.    
+# GITHUB project created on the 280317 by Mar Muniz			                                                #
