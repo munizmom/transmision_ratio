@@ -32,13 +32,12 @@ library("data.table")
 ##############################################################################################################
 
 # wd: change the path accordinly to where you wanna work with these files.
-path= "/Users/marmmoreno/Desktop/YH_Lab/transmision_ratio/"  #mac
-path= "/home/munizmom/Documents/YH_Lab/transmision_ratio/" #ubuntu
-setwd(path)
+wd= "/Users/marmmoreno/Desktop/YH_Lab/transmision_ratio/"  #mac
+wd= "/home/munizmom/Documents/YH_Lab/transmision_ratio/" #ubuntu
+setwd(wd)
 getwd()
 
 #All the files generated should be keep on output_folder
-wd <- path
 folder <- "R_Analysis/"
 folder_input <- "input/" #folder name where we are gonna put the output files of this script 
 folder_to_analyse <- "060317_mice_line_kinasDead/"
@@ -49,25 +48,26 @@ output_mice_line <- "per_MiceLine/"
 output_dyrk1b <- "dyrk1b/"
 output_kd <- "kd/"
 output_dyrk1ae2 <- "dyrk1ae2/"
+
 output_all <- "total/"
 
 dir.create(file.path(getwd (), folder), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder, folder_to_analyse), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_data), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_data,output_mice_line), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_data,output_mice_line,output_dyrk1b), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_data,output_mice_line, output_kd), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_data,output_mice_line, output_dyrk1ae2), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder,), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_data), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_data,output_mice_line), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_data,output_mice_line,output_dyrk1b,folder_to_analyse), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_data,output_mice_line, output_dyrk1ae2,folder_to_analyse), showWarnings = FALSE)
 
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_data,output_all), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_plots), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_plots,output_data,output_all), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_plots,output_all), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_data,output_all), showWarnings = FALSE)
 
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_plots,output_mice_line), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_plots,output_mice_line, output_dyrk1b), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_plots,output_mice_line, output_kd), showWarnings = FALSE)
-dir.create(file.path(getwd (), folder,folder_to_analyse, output_folder,output_plots,output_mice_line, output_dyrk1ae2), showWarnings = FALSE)
+
+dir.create(file.path(getwd (), folder, output_folder,output_plots,output_mice_line), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_plots,output_mice_line, output_dyrk1b,folder_to_analyse), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_plots,output_mice_line, output_kd,folder_to_analyse), showWarnings = FALSE)
+dir.create(file.path(getwd (), folder, output_folder,output_plots,output_mice_line, output_dyrk1ae2,folder_to_analyse), showWarnings = FALSE)
 
 
 
@@ -96,6 +96,7 @@ options(stringsAsFactors = FALSE)
 
 kd_file1 <- read.table('./input/kinaseDead/Kinase_Dead_Strain_F.csv', header=F, skip=1, sep=";" , 
                        colClasses=c("factor","factor","factor","Date","factor", "factor", "character", "factor", "character", "numeric"), dec=",") #cannot use date as the colclasse because i lose the info of the times as it keeps only the date
+
 colnames(kd_file1) <- c("Origin", "Id", "Born_week", "Born_date", "Sex", "Genotype", "Location", "Status", "Dead_date", "Age_Decimal")
 head(kd_file1)
 
@@ -148,7 +149,7 @@ num_males <-  nrow(filter(kd, Sex=="M" ))
   mortality_sex_simple <- as.data.frame(summarise(group_by(Status_DC, Sex, After_wheaning),count =n()))  #same than above, but i will use this one later
   mortality_sex$Percentage <- mortality_sex$count/deaths_before_weaning*100
   mortality_sex$all_dead_Percentage <- max(cumsum(mortality_sex$count)/number_animals)*100
-  write.table(mortality_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd,"stats_KD_total_mortality.txt"),sep = "\t", col.names=TRUE, row.names=T)
+  write.table(mortality_sex, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse,"stats_KD_total_mortality.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 #mortality per genotype and sex
@@ -168,7 +169,7 @@ dead_animals_sex_F$dead_animals_sex <- sum(dead_animals_sex_F$dead_animals_per_s
 dead_animals_sex_F$Percentage_per_sex <- dead_animals_sex_F$dead_animals_sex/dead_animals_sex_F$total_animals_per_sex*100
 
 all_dead_animals_geno_sex <- full_join(dead_animals_sex_M,dead_animals_sex_F, by=c("Sex", "Genotype", "After_wheaning", "dead_animals_per_sex_geno", "total_animals_per_sex","Percentage_geno_sex","Percentage_sex","dead_animals_sex","Percentage_per_sex"))
-write.table(all_dead_animals_geno_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_mortality_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_dead_animals_geno_sex, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_mortality_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 # we dont really know, as only 2 of 24 animals were genotyped... so
 
@@ -179,7 +180,7 @@ mortality_by_sexes <- c(total_mortality_rate,fem/num_fem*100,males/num_males*100
 
 total_born<- as.data.frame(summarise(group_by(kd, Status, After_wheaning),count =n())) #
 total_born_sex<- as.data.frame(summarise(group_by(kd,  After_wheaning, Sex),count =n())) #
-write.table(total_born_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_born_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(total_born_sex, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_born_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 # B) Transmission
@@ -194,7 +195,7 @@ dim(transmission) #176 11
   n_genotyped <- max(cumsum(total_transmision$count))  #176
   total_transmision$Percentage <- total_transmision$count/n_genotyped*100
   total_transmision$Mean <-mean(total_transmision$Percentage)
-  write.table(total_transmision, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
+  write.table(total_transmision, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -212,7 +213,7 @@ fem_genotyped <- max(cumsum(total_transmision_sex_fem$count))
 total_transmision_sex_fem$Percentage <- total_transmision_sex_fem$count/fem_genotyped*100
 total_transmision_sex_fem$Mean <- mean(total_transmision_sex_fem$Percentage)
 transmision_sex_all <- full_join(total_transmision_sex_fem, total_transmision_sex_male, by=c("Genotype", "Sex", "count", "Percentage","Mean"))
-write.table(transmision_sex_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(transmision_sex_all, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -236,7 +237,7 @@ total_transmision_bcage_geno$Mean<- total_transmision_bcage_geno$count * 100/n_g
 geno_kd <- filter(total_transmision_bcage_geno_f, !Genotype == "R5580L-/WT") 
 geno_kd$Mean <- mean(geno_kd$Percentages)
 geno_all <- full_join(geno_wt, geno_kd, by=c("Origin", "Genotype", "count", "Number_mice_born", "Percentages","Mean"))
-write.table(geno_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_breedingCage_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(geno_all, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_breedingCage_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -251,7 +252,7 @@ total_transmision_bcage_geno_f_8_11_out$Mean<- total_transmision_bcage_geno_f_8_
 geno_kd <- filter(total_transmision_bcage_geno_f_8_11_out, !Genotype == "R5580L-/WT") 
 geno_kd$Mean <- mean(geno_kd$Percentages)
 geno_all <- full_join(geno_wt, geno_kd, by=c("Origin", "Genotype", "count", "Number_mice_born", "Percentages","Mean"))
-write.table(geno_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_breedingCage_genotypewo11_8.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(geno_all, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_breedingCage_genotypewo11_8.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -266,7 +267,7 @@ male_total_transmision_bcage_sex_f$Mean <- mean(male_total_transmision_bcage_sex
 fem_total_transmision_bcage_sex_f <- filter(total_transmision_bcage_sex_f, Sex=="F")
 fem_total_transmision_bcage_sex_f$Mean <- mean(fem_total_transmision_bcage_sex_f$percentage)
 all_total_transmision_bcage_sex_f <- full_join(male_total_transmision_bcage_sex_f, fem_total_transmision_bcage_sex_f, by= c("Origin", "Sex", "count", "Number_mice_born", "percentage","Mean"))
-write.table(all_total_transmision_bcage_sex_f, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_breedingCage_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_total_transmision_bcage_sex_f, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_breedingCage_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -294,7 +295,7 @@ all_sex_kd <- full_join(kd_fem, kd_male, by=c("Origin", "Genotype", "Sex", "coun
 
 
 all_sex_gen <- full_join(all_sex_wt, all_sex_kd, by=c("Origin", "Genotype", "Sex", "count", "Number_mice_born", "Percentage","Mean"))
-write.table(all_sex_gen, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_kd, "stats_KD_breedingCage_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_sex_gen, file=paste0(wd,folder, output_folder,output_data,output_mice_line, output_kd,folder_to_analyse, "stats_KD_breedingCage_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 ### end for KD  ###
@@ -376,7 +377,7 @@ mortality_sex <- as.data.frame(summarise(group_by(Status_DC, Sex, After_wheaning
 mortality_sex_simple <- as.data.frame(summarise(group_by(Status_DC, Sex, After_wheaning),count =n()))  #same than above, but i will use this one later
 mortality_sex$Percentage <- mortality_sex$count/deaths_before_weaning*100
 mortality_sex$all_dead_Percentage <- max(cumsum(mortality_sex$count)/number_animals)*100
-write.table(mortality_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_total_mortality.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(mortality_sex, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse, "stats_dyrk1b_total_mortality.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 #mortality per genotype and sex
@@ -401,7 +402,7 @@ write.table(all_dead_animals_geno_sex, file=paste0(wd,folder, folder_to_analyse,
 
 total_born<- as.data.frame(summarise(group_by(kd, Status, After_wheaning),count =n())) #
 total_born_sex<- as.data.frame(summarise(group_by(kd,  After_wheaning, Sex),count =n())) #
-write.table(total_born_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_born_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(total_born_sex, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse,"stats_dyrk1b_born_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -419,7 +420,7 @@ total_transmision <- total_transmision[-off,]
 n_genotyped <- max(cumsum(total_transmision$count))  #176
 total_transmision$Percentage <- total_transmision$count/n_genotyped*100
 total_transmision$Mean <-mean(total_transmision$Percentage)
-write.table(total_transmision, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(total_transmision, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse, "stats_dyrk1b_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -439,7 +440,7 @@ fem_genotyped <- max(cumsum(total_transmision_sex_fem$count))
 total_transmision_sex_fem$Percentage <- total_transmision_sex_fem$count/fem_genotyped*100
 total_transmision_sex_fem$Mean <- mean(total_transmision_sex_fem$Percentage)
 transmision_sex_all <- full_join(total_transmision_sex_fem, total_transmision_sex_male, by=c("Genotype", "Sex", "count", "Percentage","Mean"))
-write.table(transmision_sex_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(transmision_sex_all, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse, "stats_dyrk1b_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -463,7 +464,7 @@ total_transmision_bcage_geno$Mean<- total_transmision_bcage_geno$count * 100/n_g
 geno_kd <- filter(total_transmision_bcage_geno_f, !Genotype == "R5580L-/WT") 
 geno_kd$Mean <- mean(geno_kd$Percentages)
 geno_all <- full_join(geno_wt, geno_kd, by=c("Origin", "Genotype", "count", "Number_mice_born", "Percentages","Mean"))
-write.table(geno_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_breedingCage_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(geno_all, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse, "stats_dyrk1b_breedingCage_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -478,7 +479,7 @@ total_transmision_bcage_geno_f_8_11_out$Mean<- total_transmision_bcage_geno_f_8_
 geno_kd <- filter(total_transmision_bcage_geno_f_8_11_out, !Genotype == "R5580L-/WT") 
 geno_kd$Mean <- mean(geno_kd$Percentages)
 geno_all <- full_join(geno_wt, geno_kd, by=c("Origin", "Genotype", "count", "Number_mice_born", "Percentages","Mean"))
-write.table(geno_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_breedingCage_genotypewo11_8.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(geno_all, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse, "stats_dyrk1b_breedingCage_genotypewo11_8.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -493,7 +494,7 @@ male_total_transmision_bcage_sex_f$Mean <- mean(male_total_transmision_bcage_sex
 fem_total_transmision_bcage_sex_f <- filter(total_transmision_bcage_sex_f, Sex=="F")
 fem_total_transmision_bcage_sex_f$Mean <- mean(fem_total_transmision_bcage_sex_f$percentage)
 all_total_transmision_bcage_sex_f <- full_join(male_total_transmision_bcage_sex_f, fem_total_transmision_bcage_sex_f, by= c("Origin", "Sex", "count", "Number_mice_born", "percentage","Mean"))
-write.table(all_total_transmision_bcage_sex_f, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_breedingCage_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_total_transmision_bcage_sex_f, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse,"stats_dyrk1b_breedingCage_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -521,7 +522,7 @@ all_sex_kd <- full_join(kd_fem, kd_male, by=c("Origin", "Genotype", "Sex", "coun
 
 
 all_sex_gen <- full_join(all_sex_wt, all_sex_kd, by=c("Origin", "Genotype", "Sex", "count", "Number_mice_born", "Percentage","Mean"))
-write.table(all_sex_gen, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line, output_dyrk1b, "stats_dyrk1b_breedingCage_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_sex_gen, file=paste0(wd,folder,output_folder,output_data,output_mice_line, output_dyrk1b,folder_to_analyse, "stats_dyrk1b_breedingCage_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 ### end for KD  ###
@@ -588,7 +589,7 @@ mortality_sex <- as.data.frame(summarise(group_by(Status_DC, Sex, After_wheaning
 mortality_sex_simple <- as.data.frame(summarise(group_by(Status_DC, Sex, After_wheaning),count =n()))  #same than above, but i will use this one later
 mortality_sex$Percentage <- mortality_sex$count/deaths_before_weaning*100
 mortality_sex$all_dead_Percentage <- max(cumsum(mortality_sex$count)/number_animals)*100
-write.table(mortality_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_total_mortality.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(mortality_sex, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse, "stats_tgDyrk1a2_total_mortality.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 #mortality per genotype and sex
@@ -608,7 +609,7 @@ dead_animals_sex_F$dead_animals_sex <- sum(dead_animals_sex_F$dead_animals_per_s
 dead_animals_sex_F$Percentage_per_sex <- dead_animals_sex_F$dead_animals_sex/dead_animals_sex_F$total_animals_per_sex*100
 
 all_dead_animals_geno_sex <- full_join(dead_animals_sex_M,dead_animals_sex_F, by=c("Sex", "Genotype", "After_wheaning", "dead_animals_per_sex_geno", "total_animals_per_sex","Percentage_geno_sex","Percentage_sex","dead_animals_sex","Percentage_per_sex"))
-write.table(all_dead_animals_geno_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_mortality_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_dead_animals_geno_sex, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_mortality_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 # we dont really know, as only 2 of 24 animals were genotyped... so
 
@@ -619,7 +620,7 @@ mortality_by_sexes <- c(total_mortality_rate,fem/num_fem*100,males/num_males*100
 
 total_born<- as.data.frame(summarise(group_by(kd, Status, After_wheaning),count =n())) #
 total_born_sex<- as.data.frame(summarise(group_by(kd,  After_wheaning, Sex),count =n())) #
-write.table(total_born_sex, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_born_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(total_born_sex, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_born_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -635,7 +636,7 @@ total_transmision<- as.data.frame(summarise(group_by(transmission,  Genotype),co
 n_genotyped <- max(cumsum(total_transmision$count))  #176
 total_transmision$Percentage <- total_transmision$count/n_genotyped*100
 total_transmision$Mean <-mean(total_transmision$Percentage)
-write.table(total_transmision, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(total_transmision, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -653,7 +654,7 @@ fem_genotyped <- max(cumsum(total_transmision_sex_fem$count))
 total_transmision_sex_fem$Percentage <- total_transmision_sex_fem$count/fem_genotyped*100
 total_transmision_sex_fem$Mean <- mean(total_transmision_sex_fem$Percentage)
 transmision_sex_all <- full_join(total_transmision_sex_fem, total_transmision_sex_male, by=c("Genotype", "Sex", "count", "Percentage","Mean"))
-write.table(transmision_sex_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(transmision_sex_all, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -674,7 +675,7 @@ total_transmision_bcage_geno$Mean<- total_transmision_bcage_geno$count * 100/n_g
 geno_kd <- filter(total_transmision_bcage_geno_f, !Genotype == "R5580L-/WT") 
 geno_kd$Mean <- mean(geno_kd$Percentages)
 geno_all <- full_join(geno_wt, geno_kd, by=c("Origin", "Genotype", "count", "Number_mice_born", "Percentages","Mean"))
-write.table(geno_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_breedingCage_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(geno_all, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_breedingCage_genotype.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -689,7 +690,7 @@ total_transmision_bcage_geno_f_8_11_out$Mean<- total_transmision_bcage_geno_f_8_
 geno_kd <- filter(total_transmision_bcage_geno_f_8_11_out, !Genotype == "R5580L-/WT") 
 geno_kd$Mean <- mean(geno_kd$Percentages)
 geno_all <- full_join(geno_wt, geno_kd, by=c("Origin", "Genotype", "count", "Number_mice_born", "Percentages","Mean"))
-write.table(geno_all, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_breedingCage_genotypewo11_8.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(geno_all, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_breedingCage_genotypewo11_8.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -704,7 +705,7 @@ male_total_transmision_bcage_sex_f$Mean <- mean(male_total_transmision_bcage_sex
 fem_total_transmision_bcage_sex_f <- filter(total_transmision_bcage_sex_f, Sex=="F")
 fem_total_transmision_bcage_sex_f$Mean <- mean(fem_total_transmision_bcage_sex_f$percentage)
 all_total_transmision_bcage_sex_f <- full_join(male_total_transmision_bcage_sex_f, fem_total_transmision_bcage_sex_f, by= c("Origin", "Sex", "count", "Number_mice_born", "percentage","Mean"))
-write.table(all_total_transmision_bcage_sex_f, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_breedingCage_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_total_transmision_bcage_sex_f, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_breedingCage_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 
@@ -732,7 +733,7 @@ all_sex_kd <- full_join(kd_fem, kd_male, by=c("Origin", "Genotype", "Sex", "coun
 
 
 all_sex_gen <- full_join(all_sex_wt, all_sex_kd, by=c("Origin", "Genotype", "Sex", "count", "Number_mice_born", "Percentage","Mean"))
-write.table(all_sex_gen, file=paste0(wd,folder, folder_to_analyse,output_folder,output_data,output_mice_line,output_dyrk1ae2, "stats_tgDyrk1a2_breedingCage_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
+write.table(all_sex_gen, file=paste0(wd,folder, output_folder,output_data,output_mice_line,output_dyrk1ae2,folder_to_analyse,  "stats_tgDyrk1a2_breedingCage_genotype_sex.txt"),sep = "\t", col.names=TRUE, row.names=T)
 
 
 ### end for dyrk1a2 ###
