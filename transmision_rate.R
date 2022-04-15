@@ -32,8 +32,7 @@ library("data.table")
 ##############################################################################################################
 
 # wd: change the path accordinly to where you wanna work with these files.
-wd= "/Users/marmmoreno/Desktop/YH_Lab/transmision_ratio/"  #mac
-wd= "/home/munizmom/Documents/YH_Lab/transmision_ratio/" #ubuntu
+wd= "/home/munizmom/Documents/transmision_ratio/" 
 setwd(wd)
 getwd()
 
